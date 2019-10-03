@@ -51,7 +51,7 @@ class Ingresar (Escoba):
                 self.cartasm = list(max(self.posiblejugada))
                 self.cartaspc = self.cartausada[self.posiblejugada.index(max(self.posiblejugada))]
             else:
-                self.cartaspc = self.manoPC[random.randint(0, len(self.manoPC)-1)]
+                self.cartaspc = self.manoPC[random.randint(0, len(self.manoPC))-1]
 
             if self.sacarCartas(self.cartaspc, self.cartasm):
                 if len(self.cartasm) > 0:
@@ -63,13 +63,17 @@ class Ingresar (Escoba):
         for carta in self.mesa:
             print(carta, end=" ")
 
+        if self.turno:
+            print("\n\n", self.manoJugador)
+        else:
+            print("\n\n", self.manoPC)
+
     def jugar(self):
         while not self.ganar():
             if self.manoJugador == [] and self.manoPC == []:
                 self.repartir()
             if self.turno:
                 self.imprimirCartas()
-                print("\n\n", self.manoJugador)
                 self.cartasj = input("Ingrese su carta   ")
                 self.cartasm = input("Ingrese las cartas de la mesa    ")
                 print("\n")
@@ -88,9 +92,13 @@ class Ingresar (Escoba):
         print("\nCantidad de escobas de PC", self.cantidadEscobaPC)
         print("\n\nCantidad de sietes del jugador", self.cantidadSietesJugador)
         print("\nCantidad de sietes de PC", self.cantidadSietesPC)
+        if self.el7lotiene == "j":
+            print("\n\nEl Jugador tiene el 7 de oro")
+        else:
+            print("\nPC tiene el 7 de oro")
         print("\n\nPuntaje Jugador:", self.puntajeJugador, "\n")
         print("Puntaje PC:", self.puntajePC, "\n")
 
 
-juego = Ingresar()
-juego.jugar()
+# juego = Ingresar()
+# juego.jugar()

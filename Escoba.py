@@ -5,10 +5,6 @@ class Escoba ():
 
     def __init__(self):
 
-        self.ocho = 8
-        self.nueve = 9
-        self.diez = 10
-
         self.turno = True
 
         self.manoJugador = []
@@ -40,9 +36,9 @@ class Escoba ():
                      (5, "o"),
                      (6, "o"),
                      (7, "o"),
-                     (self.ocho, "o"),
-                     (self.nueve, "o"),
-                     (self.diez, "o"),
+                     (8, "o"),
+                     (9, "o"),
+                     (10, "o"),
                      (1, "e"),
                      (2, "e"),
                      (3, "e"),
@@ -50,9 +46,9 @@ class Escoba ():
                      (5, "e"),
                      (6, "e"),
                      (7, "e"),
-                     (self.ocho, "e"),
-                     (self.nueve, "e"),
-                     (self.diez, "e"),
+                     (8, "e"),
+                     (9, "e"),
+                     (10, "e"),
                      (1, "c"),
                      (2, "c"),
                      (3, "c"),
@@ -60,9 +56,9 @@ class Escoba ():
                      (5, "c"),
                      (6, "c"),
                      (7, "c"),
-                     (self.ocho, "c"),
-                     (self.nueve, "c"),
-                     (self.diez, "c"),
+                     (8, "c"),
+                     (9, "c"),
+                     (10, "c"),
                      (1, "b"),
                      (2, "b"),
                      (3, "b"),
@@ -70,9 +66,9 @@ class Escoba ():
                      (5, "b"),
                      (6, "b"),
                      (7, "b"),
-                     (self.ocho, "b"),
-                     (self.nueve, "b"),
-                     (self.diez, "b"),
+                     (8, "b"),
+                     (9, "b"),
+                     (10, "b"),
                      ]
 
     def sacarCartas(self, cj, cm):
@@ -188,22 +184,28 @@ class Escoba ():
 
         # Reparto 3 cartas a cada uno y saco esas cartas del mazo
         for i in range(3):
-            self.manoJugador.append(self.mazo.pop(random.randint(0, len(self.mazo)-1)))
-            self.manoPC.append(self.mazo.pop(random.randint(0, len(self.mazo)-1)))
+            self.manoJugador.append(self.mazo.pop(random.randint(0, len(self.mazo))-1))
+            self.manoPC.append(self.mazo.pop(random.randint(0, len(self.mazo))-1))
 
         # Si no hay cartas en la mesa agrego 4 y las saco del mazo
         if len(self.mesa) == 0:
             for i in range(4):
-                self.mesa.append(self.mazo.pop(random.randint(0, len(self.mazo)-1)))
+                self.mesa.append(self.mazo.pop(random.randint(0, len(self.mazo))-1))
             temp = []
             for item in self.mesa:
                 temp.append(item[0])
             if sum(temp) == 15:
-                self.mesa = []  # Saco todas las cartas de la mesa
-                if self.turno:
-                    self.cantidadEscobaPC += 2
+                if len(self.mazo) == 30:
+                    self.EscobaReal = 2
                 else:
-                    self.cantidadEscobaJugador += 2
+                    self.EscobaReal = 1
+                if self.turno:
+                    self.cantidadPuntosPC += self.EscobaReal
+                    self.cantidadCartasPC += len(self.mesa)
+                else:
+                    self.cantidadPuntosJugador += self.EscobaReal
+                    self.cantidadCartasJugador += len(self.mesa)
+                self.mesa = []  # Saco todas las cartas de la mesa
 
     # Cambia de el turno de el jugador al de PC y viceversa
     def cambiarTurno(self):
@@ -214,12 +216,16 @@ class Escoba ():
 
     def ganar(self):
 
-        # Si el mazo tiene mas de 0 cartas, el juego sigue
-        if len(self.mazo) > 0:
+        # Si el mazo, la mesa, la mano del jugador y
+        # la mano de PC tiene mas de 0 cartas, el juego sigue
+        if (len(self.mazo) > 0 or len(self.manoJugador) > 0 or len(self.manoPC) > 0):
             return False
 
         # Si no hay cartas en el mazo
         else:
+
+            self.contarCartas((0, ""), self.mesa)
+            self.mesa = []
 
             # Sumar un punto al que tenga mas cartas
             if self.cantidadCartasJugador == self.cantidadCartasPC:
