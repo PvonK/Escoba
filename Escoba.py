@@ -235,13 +235,9 @@ class Escoba ():
             else:
                 self.puntajePC += 1
 
-            # Sumar un punto al que tenga mas escobas
-            if self.cantidadEscobaJugador == self.cantidadEscobaPC:
-                pass
-            elif self.cantidadEscobaJugador > self.cantidadEscobaPC:
-                self.puntajeJugador += 1
-            else:
-                self.puntajePC += 1
+            # Sumar un punto por cada escoba
+            self.puntajeJugador += self.cantidadEscobaJugador
+            self.puntajePC += self.cantidadEscobaPC
 
             # Sumar un punto al que tenga mas oro
             if self.cantidadOroJugador == self.cantidadOroPC:

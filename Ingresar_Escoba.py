@@ -64,9 +64,11 @@ class Ingresar (Escoba):
             print(carta, end=" ")
 
         if self.turno:
-            print("\n\n", self.manoJugador)
-        else:
-            print("\n\n", self.manoPC)
+            for carta in self.manoJugador:
+                print("\n", carta, end=" ")
+        # else:
+        #     for carta in self.manoPC:
+        #         print("\n", carta, end=" ")
 
     def jugar(self):
         while not self.ganar():
