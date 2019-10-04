@@ -122,11 +122,16 @@ class Escoba ():
 
     def contarCartas(self, cj, cm):
 
+        if cj[0] == 0:
+            self.ultima = 0
+        else:
+            self.ultima = 1
+
         # Verifico si es el turno de el jugador o no
         if self.turno:
 
             # Le sumo las cartas que saque de la mesa mas la de mi mano
-            self.cantidadCartasJugador += len(cm) + 1
+            self.cantidadCartasJugador += len(cm) + self.ultima
 
             # Verifico si saque el 7 de oro
             if (7, "o") == cj or (7, "o") in cm:
@@ -155,7 +160,7 @@ class Escoba ():
         # Si no es el turno del jugador
         else:
             # Le sumo las cartas que saco de la mesa mas la de su mano
-            self.cantidadCartasPC += len(cm) + 1
+            self.cantidadCartasPC += len(cm) + self.ultima
 
             # Verifico si saco el 7 de oro
             if (7, "o") == cj or (7, "o") in cm:
@@ -200,11 +205,12 @@ class Escoba ():
                 else:
                     self.EscobaReal = 1
                 if self.turno:
-                    self.cantidadPuntosPC += self.EscobaReal
+                    self.puntajePC += self.EscobaReal
                     self.cantidadCartasPC += len(self.mesa)
                 else:
-                    self.cantidadPuntosJugador += self.EscobaReal
+                    self.puntajeJugador += self.EscobaReal
                     self.cantidadCartasJugador += len(self.mesa)
+                return (self.EscobaReal, self.mesa)
                 self.mesa = []  # Saco todas las cartas de la mesa
 
     # Cambia de el turno de el jugador al de PC y viceversa

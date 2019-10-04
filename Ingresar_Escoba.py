@@ -12,15 +12,26 @@ class Ingresar (Escoba):
     def validar(self, cj, cm):
 
         try:
+
             self.cjugador = (int(cj[:-1]), cj[-1:])
             self.cmesa = []
             for item in cm.split():
                 self.cmesa.append((int(item[:-1]), item[-1:]))
+
+            if self.ochosNueves == "si":
+                pass
+            else:
+                if self.cjugador[0] >= 10:
+                    self.cjugador = (self.cjugador[0]-2, self.cjugador[1])
+                for item in self.cmesa:
+                    if item[0] >= 10:
+                        self.cmesa[self.cmesa.index(item)] = (item[0]-2, item[1])
+
             if all(items in self.mesa for items in self.cmesa):
                 return True
             else:
                 return False
-        except:
+        except Exception:
             return False
 
     def juegaPC(self):
@@ -55,36 +66,69 @@ class Ingresar (Escoba):
 
             if self.sacarCartas(self.cartaspc, self.cartasm):
                 if len(self.cartasm) > 0:
-                    return "PC saco las cartas {} y uso la carta {}".format(self.cartasm, self.cartaspc)
+                    return "PC saco las cartas {} y uso la carta {}".format(self.numeros(self.cartasm), self.numeros(self.cartaspc))
                 else:
-                    return "PC dejo la carta {}".format(self.cartaspc)
+                    return "PC dejo la carta {}".format(self.numeros(self.cartaspc))
+
+    def numeros(self, cart):
+        self.cartlista = []
+        while self.ochosNueves != "si" or self.ochosNueves != "no":
+            if self.ochosNueves == "si":
+                return cart
+            elif self.ochosNueves == "no":
+                if isinstance(cart, list):
+                    for carta in cart:
+                        if carta[0] >= 8:
+                            self.cartlista.append((carta[0]+2, carta[1]))
+                        else:
+                            self.cartlista.append(carta)
+                    return self.cartlista
+                else:
+                    if cart[0] >= 8:
+                        return (cart[0]+2, cart[1])
+                    else:
+                        return cart
+            else:
+                self.ochosNueves = input("Ingrese si o no    ")
 
     def imprimirCartas(self):
         for carta in self.mesa:
-            print(carta, end=" ")
+            print(self.numeros(carta), end=" ")
+
+        print("\n")
 
         if self.turno:
             for carta in self.manoJugador:
-                print("\n", carta, end=" ")
+                print(self.numeros(carta), end=" ")
         # else:
         #     for carta in self.manoPC:
-        #         print("\n", carta, end=" ")
+        #         print(self.numeros(carta), end=" ")
 
     def jugar(self):
+        self.ochosNueves = input("¿Quiere jugar con 8 y 9?  (si/no)   ")
         while not self.ganar():
             if self.manoJugador == [] and self.manoPC == []:
-                self.repartir()
+                x = self.repartir()
+                if x:
+                    if x[0] == 1:
+                        print(x[1], "\nEscoba!")
+                    elif x[1] == 2:
+                        print(x[1], "\nEscoba Real!")
+
             if self.turno:
                 self.imprimirCartas()
-                self.cartasj = input("Ingrese su carta   ")
+                self.cartasj = input("\nIngrese su carta   ")
                 self.cartasm = input("Ingrese las cartas de la mesa    ")
                 print("\n")
                 if not (self.validar(self.cartasj, self.cartasm)
                    and self.sacarCartas(self.cjugador, self.cmesa)):
                     print("Ingrese cartas validas\n")
+                else:
+                    print("-------Fin de turno jugador-------\n")
             else:
                 self.imprimirCartas()
-                print("\n\n", self.juegaPC(), "\n")
+                print(self.juegaPC(), "\n")
+                print("-------Fin de turno PC-------\n")
 
         print("\nCantidad de cartas del jugador", self.cantidadCartasJugador)
         print("\nCantidad de cartas de PC", self.cantidadCartasPC)
@@ -102,5 +146,5 @@ class Ingresar (Escoba):
         print("Puntaje PC:", self.puntajePC, "\n")
 
 
-# juego = Ingresar()
-# juego.jugar()
+juego = Ingresar()
+juego.jugar()
